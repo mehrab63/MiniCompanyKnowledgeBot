@@ -6,21 +6,20 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddSingleton<KnowledgeService>();
- 
+
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.MapPost("/ask",
-    (AskRequest request,
-     KnowledgeService service) =>
+    (AskRequest request, KnowledgeService service) =>
     {
-        var result = service.Ask(request.Question);
+        var (answer, source) = service.Ask(request.Question);
 
         return Results.Ok(new AskResponse
         {
-            Answer = result.answer,
-            Source = result.source
+            Answer = answer,
+            Source = source
         });
     });
 
