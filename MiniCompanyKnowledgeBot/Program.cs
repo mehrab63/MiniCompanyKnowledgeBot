@@ -1,23 +1,29 @@
+using MiniCompanyKnowledgeBot.Models;
+using MiniCompanyKnowledgeBot.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddSingleton<KnowledgeService>();
+ 
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+app.MapPost("/ask",
+    (AskRequest request,
+     KnowledgeService service) =>
+    {
+        var result = service.Ask(request.Question);
+
+        return Results.Ok(new AskResponse
+        {
+            Answer = result.answer,
+            Source = result.source
+        });
+    });
 
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
 
 app.Run();
