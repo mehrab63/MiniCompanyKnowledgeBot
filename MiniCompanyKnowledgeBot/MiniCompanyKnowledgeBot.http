@@ -1,0 +1,6 @@
+@MiniCompanyKnowledgeBot_HostAddress = http://localhost:5192
+
+GET {{MiniCompanyKnowledgeBot_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
