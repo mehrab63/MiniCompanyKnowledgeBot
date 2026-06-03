@@ -5,6 +5,6 @@ namespace MiniCompanyKnowledgeBot.Interfaces
 {
     public interface IKnowledgeService
     {
-        ResultDto<AskResponse> Ask(string question);
+        ResultDto<AskResponse> Ask(AskRequest askRequest);
     }
 }

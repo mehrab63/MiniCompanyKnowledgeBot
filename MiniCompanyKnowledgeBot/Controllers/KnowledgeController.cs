@@ -7,17 +7,17 @@ namespace MiniCompanyKnowledgeBot.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class QuestionController : ControllerBase
+    public class KnowledgeController : ControllerBase
     {
         private readonly IKnowledgeService _knowledgeService;
-        public QuestionController(IKnowledgeService knowledgeService)
+        public KnowledgeController(IKnowledgeService knowledgeService)
         {
             _knowledgeService = knowledgeService;
         }
         [HttpPost("/ask")]
-        public IActionResult AskQuestion(string question)
+        public IActionResult AskQuestion(AskRequest askRequest)
         {
-            var result = _knowledgeService.Ask(question);
+            var result = _knowledgeService.Ask(askRequest);
             
             return Ok(result);
         }

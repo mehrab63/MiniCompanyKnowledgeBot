@@ -9,6 +9,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddScoped<IKnowledgeService, KnowledgeService>();
 builder.Services.AddSingleton<IConversationStore, InMemoryConversationStore>();
+builder.Services.AddSingleton<IDocumentStore, InMemoryDocumentStore>();
 
 var app = builder.Build();
 

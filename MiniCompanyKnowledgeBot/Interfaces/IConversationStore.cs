@@ -4,11 +4,8 @@ namespace MiniCompanyKnowledgeBot.Interfaces
 {
     public interface IConversationStore
     {
-        Task AddMessageAsync(
-            string sessionId,
-            string role,
-            string content);
+        void AddMessage(string sessionId, Message message);
 
-        Task<List<Message>> GetHistoryAsync(string sessionId);
+        IReadOnlyList<Message> GetMessages(string sessionId);
     }
 }

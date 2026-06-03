@@ -4,38 +4,27 @@ using MiniCompanyKnowledgeBot.Models;
 namespace MiniCompanyKnowledgeBot.Services
 {
     public class InMemoryConversationStore : IConversationStore
-    {
-        private readonly Dictionary<string, List<Message>>
-            _conversations = new();
-
-        public Task AddMessageAsync(
-            string sessionId,
-            string role,
-            string content)
+    { 
+        private readonly Dictionary<string, List<Message>> _store = new();
+        public void AddMessage(string sessionId, Message message)
         {
-            if (!_conversations.ContainsKey(sessionId))
+            if (!_store.ContainsKey(sessionId))
             {
-                _conversations[sessionId] = new List<Message>();
+                _store[sessionId] = [];
             }
 
-            _conversations[sessionId].Add(new Message
-            {
-                Role = role,
-                Content = content
-            });
-
-            return Task.CompletedTask;
+            _store[sessionId].Add(message);
         }
 
-        public Task<List<Message>> GetHistoryAsync(
-            string sessionId)
+        public IReadOnlyList<Message> GetMessages(string sessionId)
         {
-            if (!_conversations.ContainsKey(sessionId))
-            {
-                return Task.FromResult(new List<Message>());
-            }
-
-            return Task.FromResult(_conversations[sessionId]);
+            return _store.TryGetValue(
+                sessionId,
+                out var messages)
+                ? messages
+                : [];
         }
+
+
     }
 }
