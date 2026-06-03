@@ -1,6 +1,9 @@
-﻿namespace MiniCompanyKnowledgeBot.Services
+﻿using MiniCompanyKnowledgeBot.Interfaces;
+using MiniCompanyKnowledgeBot.Models;
+using MiniCompanyKnowledgeBot.Models.Dtos; 
+namespace MiniCompanyKnowledgeBot.Services
 {
-    public class KnowledgeService
+    public class KnowledgeService:IKnowledgeService
     {
         private readonly string _docsPath;
 
@@ -9,7 +12,7 @@
             _docsPath = Path.Combine(env.ContentRootPath, "docs");
         }
 
-        public (string answer, string source) Ask(string question)
+        public ResultDto<AskResponse> Ask(string question)
         {
             question = question.ToLower();
 
@@ -24,7 +27,15 @@
 
                 if (content.ToLower().Contains(question))
                 {
-                    return (content, Path.GetFileName(file));
+                    return new ResultDto<AskResponse>(true)
+                    {
+                        Data = new AskResponse
+                        {
+                            Answer = content,
+                            Source = Path.GetFileName(file)
+                        },
+                        Message = ["اطلاعاتی پیدا نشد."]
+                    }; 
                 }
 
                 var score = Score(content.ToLower(), question);
@@ -38,10 +49,25 @@
 
             if (string.IsNullOrWhiteSpace(bestMatch))
             {
-                return ("اطلاعاتی پیدا نشد.", "");
+                return new ResultDto<AskResponse>(false)
+                {
+                    Data = new AskResponse
+                    {
+                        Answer = bestMatch,
+                        Source = source
+                    },
+                    Message = ["اطلاعاتی پیدا نشد."]
+                };
             }
 
-            return (bestMatch, source);
+            return new ResultDto<AskResponse>(true)
+            {
+                Data = new AskResponse
+                {
+                    Answer = bestMatch,
+                    Source = source
+                }
+            };
         }
 
         private int Score(string content, string question)
